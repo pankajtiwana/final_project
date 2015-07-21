@@ -48,6 +48,7 @@ public class UserCredentials extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        //out.write("chal ja chokrichod");
         try {
             con = DatabaseConnection.getConnection();
         } catch (SQLException e) {
@@ -78,7 +79,10 @@ public class UserCredentials extends HttpServlet {
         PrintWriter out = response.getWriter();
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
+if(con==null)
+{
+    out.print("not connected");
+}
         try {
             smt = con.createStatement();
 
