@@ -37,7 +37,7 @@ public class blog {
     @Produces("application/json")
     public String getJson() {
         //TODO return proper representation object
-        throw new UnsupportedOperationException();
+        return "O'jas teri mano bhosdo";
     }
 
     /**
