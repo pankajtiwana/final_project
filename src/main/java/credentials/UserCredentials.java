@@ -1,3 +1,4 @@
+
 package credentials;
 
 /*
@@ -15,7 +16,6 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +35,26 @@ public class UserCredentials extends HttpServlet {
     ResultSet result;
     DatabaseConnection connection = new DatabaseConnection();
 
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        try {
+            con = DatabaseConnection.getConnection();
+        } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            out.close();
+        }
+    }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -48,22 +68,16 @@ public class UserCredentials extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session=request.getSession();
-        try {
-            con = DatabaseConnection.getConnection();
-
-        } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(UserCredentials.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
 
         PrintWriter out = response.getWriter();
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-       
+
         try {
             smt = con.createStatement();
 
         } catch (SQLException ex) {
-            
             Logger.getLogger(UserCredentials.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
@@ -75,9 +89,9 @@ public class UserCredentials extends HttpServlet {
 
                 if (us.equals(username)) {
                     session.setAttribute("username", us);
-                    out.write("true");
+                    out.print("true");
                 } else {
-                    out.write("false");
+                    out.print("false");
                 }
             }
             if (count==0) {
@@ -87,9 +101,10 @@ public class UserCredentials extends HttpServlet {
             }
 
         } catch (SQLException ex) {
-            
+           
             Logger.getLogger(UserCredentials.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     /**
@@ -103,7 +118,7 @@ public class UserCredentials extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
+        processRequest(request, response);
 
     }
 

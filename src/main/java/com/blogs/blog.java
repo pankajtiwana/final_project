@@ -5,13 +5,20 @@
  */
 package com.blogs;
 
+import java.math.BigDecimal;
 import javax.ejb.Stateful;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 
 /**
  * REST Web Service
@@ -21,6 +28,7 @@ import javax.ws.rs.Produces;
 @Stateful
 @Path("blog")
 public class blog {
+    JsonArrayBuilder array=Json.createArrayBuilder();
 
     
     /**
@@ -33,11 +41,18 @@ public class blog {
      * Retrieves representation of an instance of com.blogs.blog
      * @return an instance of java.lang.String
      */
+    @Path("/globalblogs")
     @GET
     @Produces("application/json")
-    public String getJson() {
+    public String getJson(@Context HttpServletRequest request) {
         //TODO return proper representation object
-        return "O'jas teri mano bhosdo";
+        HttpSession session=request.getSession();
+        String user=(String) session.getAttribute("username");
+       JsonObjectBuilder build=Json.createObjectBuilder().add("myname", "pankaj")
+                                                         .add("username", user);
+       array.add(build);
+       String myname=array.build().toString();
+       return myname;
     }
 
     /**

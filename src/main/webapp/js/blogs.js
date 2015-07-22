@@ -8,17 +8,21 @@ $(document).ready(function(){
    alert('vxvxvxvfds');
       $.ajax({
                     type: 'GET',
-                    url: 'rs/blog',
+                    url: 'rs/blog/globalblogs',
                     dataType: 'json',
                     contentType: 'application/json; charset=utf-8',
                     success: function(data) {
                         alert(data);
-//                        alert(data[0].toString());
-//                        console.log(data);
-//                        $.each(data, function(index, item) {
-//                            alert(item.name);
-//                            $("#name").append("<td>" + item.name + "</td>");
-                       // });
+                       
+                     //alert(data[0].toString());
+                        //console.log(data1);
+                       $.each(data, function(index, item) {
+                            alert(item.username);
+                            //$("#name").append("<td>" + item.name + "</td>");
+                       });
+                    },
+                    error: function(jqxhr, status, errorMsg) {
+                    alert('Failed! ' + errorMsg);
                     }
                 });
 });
