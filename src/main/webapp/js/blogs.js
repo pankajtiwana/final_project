@@ -9,7 +9,7 @@ $(document).ready(function(){
       $.ajax({
                     type: 'GET',
                     url: 'rs/blog',
-                    //dataType: 'json',
+                    dataType: 'json',
                     contentType: 'application/json; charset=utf-8',
                     success: function(data) {
                         alert(data);
