@@ -6,31 +6,37 @@
 
 $(document).ready(function () {
 
- 
+
 
 
     $("#log").click(function (e) {
         e.preventDefault();
-     alert("dfsdgds");
+
         var username = document.getElementById("name").value;
         var password = document.getElementById("pass").value;
+        var data = {"username": username, "password": password};
 
-        
         $.ajax({
-            url: "UserCredentials",
-            method: "get",
-            data: {"username": username, "password": password},
+            url: "userlog",
+            method: "GET",
+            data: data,
             success: function (data) {
 
                 if (data === "false")
                 {
                     alert("username is wrong");
                 }
+                if (data === "true")
+                {
+                    window.location.replace("/blogbase/blogs.html");
+                }
 
             }
 
 
         });
+
+
 
 
     });
