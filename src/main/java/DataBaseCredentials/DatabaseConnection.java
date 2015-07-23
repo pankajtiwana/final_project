@@ -19,8 +19,8 @@ public class DatabaseConnection {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             String jdbc = "jdbc:mysql://127.8.163.130:3306/blogbase";
-            String user = "root";
-            String pass = "";
+            String user = "adminM7cKxr7";
+            String pass = "ehNHrEKpG2_Y";
             conn = DriverManager.getConnection(jdbc, user, pass);
             //String query = "SELECT * FROM product";
 
