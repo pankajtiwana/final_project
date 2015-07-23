@@ -21,14 +21,13 @@ alert('working');
             method: "GET",
             data: data,
             success: function (data) {
-alert(data);
                 if (data === "false")
                 {
                     alert("username is wrong");
                 }
                 if (data === "true")
                 {
-                    window.location.replace("/blogs.html");
+                    window.location.replace("/blogbase/blogs.html");
                 }
 
             }
