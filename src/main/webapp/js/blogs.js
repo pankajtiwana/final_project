@@ -5,24 +5,25 @@
  */
 
 $(document).ready(function(){
-   alert('vxvxvxvfds');
+     $('.bxslider').bxSlider({
+         auto: true,
+  autoControls: true
+     });
+  
       $.ajax({
                     type: 'GET',
                     url: 'rs/blog/globalblogs',
                     dataType: 'json',
                     contentType: 'application/json; charset=utf-8',
                     success: function(data) {
-                        alert(data);
                        
-                     //alert(data[0].toString());
-                        //console.log(data1);
                        $.each(data, function(index, item) {
-                            alert(item.username);
+                            alert(item.image);
                             //$("#name").append("<td>" + item.name + "</td>");
                        });
                     },
                     error: function(jqxhr, status, errorMsg) {
-                    alert('Failed! ' + errorMsg);
+                   // alert('Failed! ' + errorMsg);
                     }
                 });
 });

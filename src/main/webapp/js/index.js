@@ -10,7 +10,11 @@ $('#loginform').click(function(){
   $('.login').fadeToggle('slow');
   $(this).toggleClass('green');
 });
-
+$('#registerform').click(function(){
+   
+  $('.register').fadeToggle('slow');
+  $(this).toggleClass('green');
+});
 
 
 $(document).mouseup(function (e)
@@ -23,4 +27,6 @@ $(document).mouseup(function (e)
         container.hide();
         $('#loginform').removeClass('green');
     }
+    
+    
 });
