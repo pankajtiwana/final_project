@@ -5,10 +5,10 @@
  */
 
 $(document).ready(function(){
-     $('.bxslider').bxSlider({
-         auto: true,
-  autoControls: true
-     });
+//     $('.bxslider').bxSlider({
+//         auto: true,
+//  autoControls: true
+//     });
      alert("build");
   var image=new Image();
       $.ajax({
