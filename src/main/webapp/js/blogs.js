@@ -9,6 +9,7 @@ $(document).ready(function(){
          auto: true,
   autoControls: true
      });
+     
   var image=new Image();
       $.ajax({
                     type: 'GET',
@@ -18,21 +19,21 @@ $(document).ready(function(){
                     success: function(data) {
                        alert(data);
                        console.log(data);
-                       $.each(data, function(index, item) {
+                       //$.each(data, function(index, item) {
                             //alert(item.image1);
-                            console.log(item.image1);
-                            var base64_string =item.image1;
+                            alert('dzfdz');
+                            console.log(data);
+                            //var baseString =item.image1;
 var img = document.createElement("img");
 // added `width` , `height` properties to `img` attributes
-img.width = "1000px";
-img.height = "1000px";
-img.src = "data:image/jpg;base64,"+base64_string;
-var preview = document.getElementById("div1");
-//preview.appendChild(img);
-$("#div1").append(img);
+var oImg=document.createElement("img");
+var baseString = null;    //the base64 string you have
+var imsc = 'data:image/jpg;base64, ' + data;
+oImg.setAttribute('src', imsc);
+document.body.appendChild(oImg);
                             
                             //$("#name").append("<td>" + item.name + "</td>"); 
-                                                });
+                                                //});
                     },
                     error: function(jqxhr, status, errorMsg) {
                    // alert('Failed! ' + errorMsg);

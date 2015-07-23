@@ -43,6 +43,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.core.util.Base64;
+import com.sun.jersey.multipart.FormDataBodyPart;
+import com.sun.jersey.multipart.FormDataMultiPart;
 import com.sun.jersey.multipart.FormDataParam;
 import java.util.Date;
 import java.sql.PreparedStatement;
@@ -129,10 +131,10 @@ public class blog {
                  base64String= DatatypeConverter.printBase64Binary(output.toByteArray());
                  //base64String = Base64.encode(output.toByteArray()).toString();
               
-  JsonObjectBuilder build1 = Json.createObjectBuilder().add("image1", base64String);
+  //JsonObjectBuilder build1 = Json.createObjectBuilder().add("image1", base64String);
                    
-           array.add(build1);
-           myname = array.build().toString();
+           //array.add(build1);
+           //myname = array.build().toString();
                 myImage = Toolkit.getDefaultToolkit().createImage(output.toByteArray());
             }
             if (count == 0) {
@@ -161,7 +163,7 @@ String msg=ex.getMessage();
 //Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
         }
         //return "did not work";
-         return myname;
+         return base64String;
     }
 
     /**
@@ -179,8 +181,11 @@ String msg=ex.getMessage();
      @POST
     @Path("/adduser")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public String Upload(@FormDataParam("image") InputStream str
+    public String Upload(FormDataMultiPart form
                          ) {
+        
+        FormDataBodyPart imgpart=form.getField("image");
+        InputStream fileInputStream = imgpart.getValueAs(InputStream.class);
 
         try {
             con = DatabaseConnection.getConnection();
@@ -199,7 +204,7 @@ String msg=ex.getMessage();
             
             String sql = "INSERT INTO IMAGES(image, tag, username,date_uploaded) values (?, ?, ?,?)";
             PreparedStatement statement = con.prepareStatement(sql);
-            statement.setBlob(1, str);
+            statement.setBlob(1, fileInputStream);
             statement.setString(2, "first one");
             statement.setString(3, "pkt@yahoo.com");
             Date d=new Date();
@@ -219,7 +224,7 @@ String msg=ex.getMessage();
              return "sdfgdsgfdsgdfg";
             //Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
         }
-return "see";
+return "jkhgtuyfg";
     }
 
     
