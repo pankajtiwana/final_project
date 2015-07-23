@@ -15,13 +15,13 @@ $(document).ready(function () {
         var username = document.getElementById("name").value;
         var password = document.getElementById("pass").value;
         var data = {"username": username, "password": password};
-
+alert('working');
         $.ajax({
             url: "userlog",
             method: "GET",
             data: data,
             success: function (data) {
-
+alert(data);
                 if (data === "false")
                 {
                     alert("username is wrong");

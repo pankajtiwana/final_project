@@ -51,7 +51,7 @@ public class UserCredentials extends HttpServlet {
         try {
             con = DatabaseConnection.getConnection();
         } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            out.close();
+            out.write("exception");
         }
     }
 
