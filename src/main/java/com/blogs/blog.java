@@ -129,13 +129,9 @@ public class blog {
                 }
                 byte[] dt= new byte[166666];
                  base64String= DatatypeConverter.printBase64Binary(output.toByteArray());
-                 //base64String = Base64.encode(output.toByteArray()).toString();
+                 base64String = Base64.encode(output.toByteArray()).toString();
               
-  //JsonObjectBuilder build1 = Json.createObjectBuilder().add("image1", base64String);
-                   
-           //array.add(build1);
-           //myname = array.build().toString();
-                myImage = Toolkit.getDefaultToolkit().createImage(output.toByteArray());
+
             }
             if (count == 0) {
                 imagepath="images/icon.png";
@@ -180,7 +176,7 @@ String msg=ex.getMessage();
      */
      @POST
     @Path("/adduser")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    //@Consumes("application/x-www-form-urlencoded","multipart/form-data")
     public String Upload(@FormDataParam("image") InputStream fileInputStream
                          ) {
         
