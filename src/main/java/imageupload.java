@@ -64,7 +64,7 @@ public class imageupload extends HttpServlet {
         try {
             con = DatabaseConnection.getConnection();
         } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            
+           out.print("dfbfgnn"); 
         }
     }
 
@@ -93,9 +93,9 @@ InputStream inputStream = null; // input stream of the upload file
         if (filePart != null) {
         try {
             // prints out some information for debugging
-            System.out.println(filePart.getName());
-            System.out.println(filePart.getSize());
-            System.out.println(filePart.getContentType());
+            out.println(filePart.getName());
+            out.println(filePart.getSize());
+            out.println(filePart.getContentType());
              
             // obtains input stream of the upload file
             inputStream = filePart.getInputStream();
@@ -103,6 +103,7 @@ InputStream inputStream = null; // input stream of the upload file
                 smt = con.createStatement();
                 
             } catch (SQLException ex) {
+                out.print("not in this");
                 Logger.getLogger(UserCredentials.class.getName()).log(Level.SEVERE, null, ex);
             }
             String sql = "INSERT INTO IMAGES(image, tag, username,date_uploaded) values (?, ?, ?,?)";
@@ -121,6 +122,7 @@ InputStream inputStream = null; // input stream of the upload file
             
             
         } catch (SQLException ex) {
+            out.printf("hjmjhgmgh");
             Logger.getLogger(imageupload.class.getName()).log(Level.SEVERE, null, ex);
         }
             
