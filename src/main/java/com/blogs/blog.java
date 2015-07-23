@@ -181,52 +181,49 @@ String msg=ex.getMessage();
      @POST
     @Path("/adduser")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public String Upload(FormDataMultiPart form
+    public String Upload(@FormDataParam("image") InputStream fileInputStream
                          ) {
-        InputStream fileInputStream;
-      
-//        FormDataBodyPart imgpart=form.getField("image");
-//         fileInputStream = imgpart.getValueAs(InputStream.class);
-        return "ghn" ;
         
-//        try {
-//            con = DatabaseConnection.getConnection();
-//            
-//            // file =  contentDispositionHeader.getFileName();
-//            
-//          
-//            
-//            // save the file to the server
-//            
-//            //saveFile(fileInputStream, filePath);
-//            
-//            
-//            
-//            // String output = "File saved to server location : " + filePath;
-//            
-//            String sql = "INSERT INTO IMAGES(image, tag, username,date_uploaded) values (?, ?, ?,?)";
-//            PreparedStatement statement = con.prepareStatement(sql);
-//            statement.setBlob(1, fileInputStream);
-//            statement.setString(2, "first one");
-//            statement.setString(3, "pkt@yahoo.com");
-//            Date d=new Date();
-//             Calendar calendar = Calendar.getInstance();
-//            java.sql.Date javaSqlDate = new java.sql.Date(calendar.getTime().getTime());
-//             statement.setDate(4,javaSqlDate);
-//          
-// 
-//            // sends the statement to the database server
-//            int row = statement.executeUpdate();
-//            
-//        } catch (SQLException ex) {
-//            String st=ex.getMessage();
-//            return "hkjjhkjh";
-//            //Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
-//         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-//             return "sdfgdsgfdsgdfg";
-//            //Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//return "jkhgtuyfg";
+       
+        
+        try {
+            con = DatabaseConnection.getConnection();
+            
+            // file =  contentDispositionHeader.getFileName();
+            
+          
+            
+            // save the file to the server
+            
+            //saveFile(fileInputStream, filePath);
+            
+            
+            
+            // String output = "File saved to server location : " + filePath;
+            
+            String sql = "INSERT INTO IMAGES(image, tag, username,date_uploaded) values (?, ?, ?,?)";
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setBlob(1, fileInputStream);
+            statement.setString(2, "first one");
+            statement.setString(3, "pkt@yahoo.com");
+            Date d=new Date();
+             Calendar calendar = Calendar.getInstance();
+            java.sql.Date javaSqlDate = new java.sql.Date(calendar.getTime().getTime());
+             statement.setDate(4,javaSqlDate);
+          
+ 
+            // sends the statement to the database server
+            int row = statement.executeUpdate();
+            
+        } catch (SQLException ex) {
+            String st=ex.getMessage();
+            return "hkjjhkjh";
+            //Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
+         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+             return "sdfgdsgfdsgdfg";
+            //Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+return "jkhgtuyfg";
     }
 
     
