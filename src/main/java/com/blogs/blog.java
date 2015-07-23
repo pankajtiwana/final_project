@@ -129,7 +129,7 @@ public class blog {
                 }
                 byte[] dt= new byte[166666];
                  base64String= DatatypeConverter.printBase64Binary(output.toByteArray());
-                 base64String = Base64.encode(output.toByteArray()).toString();
+    //             base64String = Base64.encode(output.toByteArray()).toString();
               
 
             }
