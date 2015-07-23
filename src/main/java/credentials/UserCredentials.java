@@ -73,7 +73,14 @@ public class UserCredentials extends HttpServlet {
         PrintWriter out = response.getWriter();
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
+if(con==null)
+{
+    out.write("not");
+    
+}
+else{
+    out.write("yes");
+}
         try {
             smt = con.createStatement();
 
