@@ -28,7 +28,7 @@ $(document).ready(function () {
                 }
                 if (data === "true")
                 {
-                    window.location.replace("/blogbase/blogs.html");
+                    window.location.replace("/blogs.html");
                 }
 
             }

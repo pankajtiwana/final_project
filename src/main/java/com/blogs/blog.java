@@ -42,7 +42,13 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.core.util.Base64;
 import com.sun.jersey.multipart.FormDataParam;
+import java.util.Date;
+import java.sql.PreparedStatement;
+import java.util.Arrays;
+import java.util.Calendar;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  * REST Web Service
@@ -59,6 +65,9 @@ public class blog {
     ResultSet rst;
     int a1;
     String imagepath;
+    Image myImage;
+    String base64String;
+    String myname;
 
     JsonArrayBuilder array = Json.createArrayBuilder();
 
@@ -82,15 +91,16 @@ public class blog {
      */
     @Path("/globalblogs")
     @GET
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public String getJson(@Context HttpServletRequest request) {
+        
         try{
           
             con = DatabaseConnection.getConnection();
             //TODO return proper representation object
             HttpSession session = request.getSession();
             String user = (String) session.getAttribute("username");
-           String imagequery = "SELECT image_id from IMAGES where username='"+user+"'";
+           String imagequery = "SELECT image from IMAGES where username='"+user+"'";
 //
          smt = con.createStatement();
          rst = smt.executeQuery(imagequery);
@@ -104,17 +114,26 @@ public class blog {
                 try {
                     a1 = stream.read();
                 } catch (IOException ex) {
-                        return "1mot working";
+                      return "exception in stream read";
                 }
                 while (a1 >= 0) {
                     output.write((char) a1);
                     try {
                         a1 = stream.read();
                     } catch (IOException ex) {
-                        return "2lot working";
+                        
+                        return "exception in writing ayya";
                     }
                 }
-                Image myImage = Toolkit.getDefaultToolkit().createImage(output.toByteArray());
+                byte[] dt= new byte[166666];
+                 base64String= DatatypeConverter.printBase64Binary(output.toByteArray());
+                 //base64String = Base64.encode(output.toByteArray()).toString();
+              
+  JsonObjectBuilder build1 = Json.createObjectBuilder().add("image1", base64String);
+                   
+           array.add(build1);
+           myname = array.build().toString();
+                myImage = Toolkit.getDefaultToolkit().createImage(output.toByteArray());
             }
             if (count == 0) {
                 imagepath="images/icon.png";
@@ -122,24 +141,27 @@ public class blog {
                     
             array.add(build);
             String img = array.build().toString();
-                return img; 
-            
+               return "did not read image from data base"; 
+            //return myImage;
             }
 //            JsonObjectBuilder build = Json.createObjectBuilder().add("myname", "pankaj")
 //                    .add("username", user);
 //            array.add(build);
 //            String myname = array.build().toString();
 
-        } catch (SQLException ex) {
-                        return "Exception in sql";
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex)
+       {       String msg=ex.getMessage();
+
+                     return msg;
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+            
+String msg=ex.getMessage();
+
+                     return msg;
+//Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "did not work";
+        //return "did not work";
+         return myname;
     }
 
     /**
@@ -151,40 +173,53 @@ public class blog {
 
     /**
      * PUT method for updating or creating an instance of blog
-     * @param filepath
-     * @param contentDispositionHeader
      * @param fileInputStream
-     * @param content representation for the resource
      * @return an HTTP response with content of the updated or created resource.
      */
-    
+     @POST
     @Path("/adduser")
-    @POST
-
-    
-
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public String Upload(@FormDataParam("image") InputStream str
+                         ) {
 
-    public String adduser( @FormDataParam("image") InputStream fileInputStream,
-
-            @FormDataParam("image") FormDataContentDisposition contentDispositionHeader) {
-
- String file="";
-
-        file =  contentDispositionHeader.getFileName();
-
+        try {
+            con = DatabaseConnection.getConnection();
+            
+            // file =  contentDispositionHeader.getFileName();
+            
+          
+            
+            // save the file to the server
+            
+            //saveFile(fileInputStream, filePath);
+            
+            
+            
+            // String output = "File saved to server location : " + filePath;
+            
+            String sql = "INSERT INTO IMAGES(image, tag, username,date_uploaded) values (?, ?, ?,?)";
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setBlob(1, str);
+            statement.setString(2, "first one");
+            statement.setString(3, "pkt@yahoo.com");
+            Date d=new Date();
+             Calendar calendar = Calendar.getInstance();
+            java.sql.Date javaSqlDate = new java.sql.Date(calendar.getTime().getTime());
+             statement.setDate(4,javaSqlDate);
+          
  
-
-        // save the file to the server
-
-        //saveFile(fileInputStream, filePath);
-
- 
-
-       // String output = "File saved to server location : " + filePath;
-
-
-        return file;
+            // sends the statement to the database server
+            int row = statement.executeUpdate();
+            
+        } catch (SQLException ex) {
+            String st=ex.getMessage();
+            return st;
+            //Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
+         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+             return "sdfgdsgfdsgdfg";
+            //Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+return "see";
     }
 
     
