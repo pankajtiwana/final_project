@@ -17,7 +17,7 @@ $(document).ready(function(){
                     //dataType: 'json',
                     //contentType: 'application/json; charset=utf-8',
                     success: function(data) {
-                       alert(data);
+                       //alert(data);
                        console.log(data);
                        //$.each(data, function(index, item) {
                             //alert(item.image1);
