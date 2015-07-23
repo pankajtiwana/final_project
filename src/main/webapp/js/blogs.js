@@ -9,13 +9,13 @@ $(document).ready(function(){
          auto: true,
   autoControls: true
      });
-     
+     alert("dfvsdfvds");
   var image=new Image();
       $.ajax({
                     type: 'GET',
                     url: 'rs/blog/globalblogs',
-                    dataType: 'json',
-                    contentType: 'application/json; charset=utf-8',
+                    //dataType: 'json',
+                    //contentType: 'application/json; charset=utf-8',
                     success: function(data) {
                        alert(data);
                        console.log(data);
@@ -36,7 +36,7 @@ document.body.appendChild(oImg);
                                                 //});
                     },
                     error: function(jqxhr, status, errorMsg) {
-                   // alert('Failed! ' + errorMsg);
+                  alert('Failed! ' + errorMsg);
                     }
                 });
 });

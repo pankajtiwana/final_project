@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,7 @@ import javax.servlet.http.Part;
  * @author pankajtiwana
  */
 @WebServlet(urlPatterns = {"/imageupload"})
+@MultipartConfig(maxFileSize = 16177215) 
 public class imageupload extends HttpServlet {
 
     /**

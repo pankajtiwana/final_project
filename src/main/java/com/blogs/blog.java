@@ -93,7 +93,7 @@ public class blog {
      */
     @Path("/globalblogs")
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     public String getJson(@Context HttpServletRequest request) {
         
         try{
