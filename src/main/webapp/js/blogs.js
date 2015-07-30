@@ -218,7 +218,7 @@ oImg.setAttribute('width', 50);
             
             
              getMessages();
-            setInterval(getMessages, 100000);
+            setInterval(getMessages, 1000);
 });
   
            
