@@ -68,8 +68,9 @@ import javax.xml.bind.DatatypeConverter;
 @Stateful
 @Path("blog")
 public class blog {
-final static Map<String, AsyncResponse> waiters = new ConcurrentHashMap<>();  
-final static ExecutorService ex = Executors.newSingleThreadExecutor(); 
+
+    final static Map<String, AsyncResponse> waiters = new ConcurrentHashMap<>();
+    final static ExecutorService ex = Executors.newSingleThreadExecutor();
     Connection con = null;
     int count = 0;
     Statement smt;
@@ -82,8 +83,7 @@ final static ExecutorService ex = Executors.newSingleThreadExecutor();
     int totalnum;
 
     JsonArrayBuilder array = Json.createArrayBuilder();
-        JsonArrayBuilder array1 = Json.createArrayBuilder();
-
+    JsonArrayBuilder array1 = Json.createArrayBuilder();
 
     /**
      * Creates a new instance of blog
@@ -189,28 +189,25 @@ final static ExecutorService ex = Executors.newSingleThreadExecutor();
     @GET
     @Path("/global")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getAllData(@Context HttpServletRequest request){
+    public String getAllData(@Context HttpServletRequest request) {
 
-    try {
-        con = DatabaseConnection.getConnection();
-        
-        String query="SELECT blog.blog_id,blog_text,blog_date,blog.username, image FROM blog LEFT OUTER JOIN images ON blog.username=images.username";
-          
-        
+        try {
+            con = DatabaseConnection.getConnection();
+
+            String query = "SELECT blog.blog_id,blog_text,blog_date,blog.username, image FROM blog LEFT OUTER JOIN images ON blog.username=images.username";
+
                // String query="SELECT count(blog.blog_id),blog.blog_id,blog_text,blog_date,blog.username, image, comment_id,comment_text,comment_date,comments.username FROM blog INNER JOIN images ON blog.username=images.username";
-
-        smt = con.createStatement();
-                    rst=smt.executeQuery(query);
-                    while(rst.next())
-                    {
-                        InputStream st=rst.getBinaryStream(5);
-                        ByteArrayOutputStream output = new ByteArrayOutputStream();
-            try {
-                a1 = st.read();
-            } catch (IOException ex) {
-                Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
-            }
-             while (a1 >= 0) {
+            smt = con.createStatement();
+            rst = smt.executeQuery(query);
+            while (rst.next()) {
+                InputStream st = rst.getBinaryStream(5);
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
+                try {
+                    a1 = st.read();
+                } catch (IOException ex) {
+                    Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                while (a1 >= 0) {
                     output.write((char) a1);
                     try {
                         a1 = st.read();
@@ -222,39 +219,32 @@ final static ExecutorService ex = Executors.newSingleThreadExecutor();
                 byte[] dt = new byte[166666];
                 base64String = DatatypeConverter.printBase64Binary(output.toByteArray());
                 //int totalblogs=rst.getInt(1);
-                int blogid=rst.getInt(1);
-                String blogtext=rst.getString(2);
-                String blogdate=rst.getString(3);
-                String bloguser=rst.getString(4);
-                
-                
-                   JsonObjectBuilder build1 = Json.createObjectBuilder()
-                    .add("bloguserimage", base64String)
-                    .add("blogid", blogid)
-                    .add("blogtext", blogtext)
-                    .add("blogdate",blogdate)
-                    .add("bloguser", bloguser);
-                     
-                                array1.add(build1);
+                int blogid = rst.getInt(1);
+                String blogtext = rst.getString(2);
+                String blogdate = rst.getString(3);
+                String bloguser = rst.getString(4);
 
-                    
-                    }
-    } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException ex) {
-        Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
+                JsonObjectBuilder build1 = Json.createObjectBuilder()
+                        .add("bloguserimage", base64String)
+                        .add("blogid", blogid)
+                        .add("blogtext", blogtext)
+                        .add("blogdate", blogdate)
+                        .add("bloguser", bloguser);
+
+                array1.add(build1);
+
+            }
+        } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException ex) {
+            Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        String alldata = array1.build().toString();
+        return alldata;
     }
-        
-                String   alldata = array1.build().toString();
-return alldata; 
-    }
-    
-   
+
     @PUT
     @Consumes("application/json")
     public void putJson(String content) {
     }
-
-
-
-
 
 }

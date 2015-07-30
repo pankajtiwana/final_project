@@ -101,7 +101,7 @@ img
     //float: right;
 }
 .photos{
-    border: 1px solid green;
+   // border: 1px solid green;
     width: 100px;
     height: 200px;
     float:left;
