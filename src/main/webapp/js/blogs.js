@@ -101,8 +101,10 @@ var photodata=$("<div id='photo"+item.blogid+"' class='photos'></div><div id='bl
              });
              
              $("#closebox").click(function(){
-                $("#blog").hide();
-                $("#opac").hide();
+                 el = document.getElementById("blog");
+                e2 = document.getElementById("opac");
+	el.style.visibility = (el.style.visibility === "visible") ? "hidden" : "visible";
+        e2.style.visibility = (e2.style.visibility === "visible") ? "hidden" : "visible";
              });
 //                
 //       function poll(){
@@ -144,6 +146,7 @@ var photodata=$("<div id='photo"+item.blogid+"' class='photos'></div><div id='bl
 
 
 $("#post").click(function(){
+    
     var xmlhttp = new XMLHttpRequest();
                 xmlhttp.open("POST", "AshychronousPolling?t="+new Date(), false);
                 var post = escape(document.getElementById("blogarea").value);
@@ -152,6 +155,12 @@ $("#post").click(function(){
                 //var messageText = escape(document.getElementById("message").value);
                 //document.getElementById("message").value = "";
                 xmlhttp.send("blog="+post); 
+                
+                el = document.getElementById("blog");
+                e2 = document.getElementById("opac");
+	el.style.visibility = (el.style.visibility === "visible") ? "hidden" : "visible";
+        e2.style.visibility = (e2.style.visibility === "visible") ? "hidden" : "visible";
+        
 });
 
 
