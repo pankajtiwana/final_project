@@ -48,6 +48,7 @@ String blogtext;
 int a1;
 String base64String;
 String sendinguserdata;
+int blogid;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -136,15 +137,16 @@ String sendinguserdata;
                        
                     
 
-              String selectquery="SELECT blog_text,image  FROM blog INNER JOIN IMAGES ON blog.username=IMAGES.username ORDER BY blog_id DESC LIMIT 1";
+              String selectquery="SELECT blog_id,blog_text,image  FROM blog INNER JOIN IMAGES ON blog.username=IMAGES.username ORDER BY blog_id DESC LIMIT 1";
               
               smt=con.prepareStatement(selectquery);
               //smt.setString(1, username);
               rst=smt.executeQuery();
               while(rst.next())
               {
-                 blogtext=rst.getString(1);
-                  InputStream stream = rst.getBinaryStream(2);
+                  blogid=rst.getInt(1);
+                 blogtext=rst.getString(2);
+                  InputStream stream = rst.getBinaryStream(3);
                 ByteArrayOutputStream output = new ByteArrayOutputStream();
 
                 try {
@@ -164,7 +166,7 @@ String sendinguserdata;
                 byte[] dt = new byte[166666];
                 base64String = DatatypeConverter.printBase64Binary(output.toByteArray());
    JsonObjectBuilder build = Json.createObjectBuilder().add("blog", blogtext)
-                    .add("image", base64String).add("user", username);
+                    .add("image", base64String).add("user", username).add("blogid", blogid);
 
             array.add(build);
             sendinguserdata = array.build().toString();

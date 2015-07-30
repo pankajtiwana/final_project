@@ -71,8 +71,8 @@ var img = document.createElement("img");
  oImg=document.createElement("img");
 var imsc = 'data:image/jpg;base64, ' + item.bloguserimage;
 oImg.setAttribute('src', imsc);
-oImg.setAttribute('height', 20);
-oImg.setAttribute('width', 20);
+oImg.setAttribute('height', 50);
+oImg.setAttribute('width', 50);
 //document.body.appendChild(oImg);
 var photodata=$("<div id='photo"+item.blogid+"' class='photos'></div><div id='blogs"+item.blogid+"' class='blogs'></div><br><br>");
 
@@ -168,12 +168,25 @@ $("#post").click(function(){
             success:function(data){
                 //alert(data);
                 console.log(data);
-                $.each(data, function(index,value){
-                   if(postuser!==value.user || postmsg!==value.blog)
+                $.each(data, function(index,item){
+                   if(postuser!==item.user || postmsg!==item.blog)
                    {
-                       $("#content").append(value.blog);
-                       postuser=value.user;
-                       postmsg=value.blog;
+                        var oImg=item.blogid;             
+                          
+var img = document.createElement("img");
+
+ oImg=document.createElement("img");
+var imsc = 'data:image/jpg;base64, ' + item.image;
+oImg.setAttribute('src', imsc);
+oImg.setAttribute('height', 50);
+oImg.setAttribute('width', 50);
+                       var photodata=$("<div id='photo"+item.blogid+"' class='photos'></div><div id='blogs"+item.blogid+"' class='blogs'></div><br><br>");
+                       $('#mainblog').prepend(photodata);
+ $("#photo"+item.blogid).append(oImg);
+   $("#blogs"+item.blogid).append(item.blog);
+                       //$("#content").append(value.blog);
+                       postuser=item.user;
+                       postmsg=item.blog;
                    }
                 
                 messagesWaiting = false;
