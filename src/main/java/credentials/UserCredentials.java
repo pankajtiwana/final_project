@@ -51,7 +51,7 @@ public class UserCredentials extends HttpServlet {
         try {
             con = DatabaseConnection.getConnection();
         } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            
+           out.write("exception occured"); 
         }
     }
 
@@ -67,6 +67,11 @@ public class UserCredentials extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        response.setHeader("Cache-control", "no-cache, no-store");
+response.setHeader("Pragma", "no-cache");
+response.setHeader("Expires", "-1");
+
         HttpSession session=request.getSession();
         processRequest(request, response);
 
@@ -78,6 +83,7 @@ public class UserCredentials extends HttpServlet {
             smt = con.createStatement();
 
         } catch (SQLException ex) {
+            out.write("Exception in staement");
             Logger.getLogger(UserCredentials.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
@@ -99,9 +105,9 @@ public class UserCredentials extends HttpServlet {
             } else {
 
             }
-
+con.close();
         } catch (SQLException ex) {
-           
+           out.write("gone");
             Logger.getLogger(UserCredentials.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -118,7 +124,7 @@ public class UserCredentials extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
 
     }
 

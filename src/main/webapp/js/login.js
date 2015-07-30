@@ -15,7 +15,7 @@ $(document).ready(function () {
         var username = document.getElementById("name").value;
         var password = document.getElementById("pass").value;
         var data = {"username": username, "password": password};
-alert('working');
+//alert('working');
         $.ajax({
             url: "userlog",
             method: "GET",

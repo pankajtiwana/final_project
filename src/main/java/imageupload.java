@@ -61,7 +61,7 @@ public class imageupload extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        //response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
             con = DatabaseConnection.getConnection();
@@ -102,6 +102,7 @@ public class imageupload extends HttpServlet {
         PrintWriter out = response.getWriter();
         String username = request.getParameter("name");
         String password = request.getParameter("pass");
+        //out.print(username);
 InputStream inputStream = null; // input stream of the upload file
          
         // obtains the upload file part in this multipart request
@@ -109,9 +110,7 @@ InputStream inputStream = null; // input stream of the upload file
         if (filePart != null) {
         try {
             // prints out some information for debugging
-            out.println(filePart.getName());
-            out.println(filePart.getSize());
-            out.println(filePart.getContentType());
+           
              
             // obtains input stream of the upload file
             inputStream = filePart.getInputStream();
@@ -122,10 +121,19 @@ InputStream inputStream = null; // input stream of the upload file
                 out.print("not in this");
                 Logger.getLogger(UserCredentials.class.getName()).log(Level.SEVERE, null, ex);
             }
+            String checkdup="Select username FROM USERS where username='"+username+"'";
+            
+            ResultSet rst=smt.executeQuery(checkdup);
+            if(rst.next())
+            {
+                out.write("ARY");
+                
+            }
+            else{
             String sql = "INSERT INTO IMAGES(image, tag, username,date_uploaded) values (?, ?, ?,?)";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setBlob(1, inputStream);
-            statement.setString(2, "first one");
+            statement.setString(2, "Profile");
             statement.setString(3, username);
             Date d=new Date();
             Calendar calendar = Calendar.getInstance();
@@ -134,16 +142,24 @@ InputStream inputStream = null; // input stream of the upload file
             
             
             // sends the statement to the database server
-            int row = statement.executeUpdate();
-            
-            
+            statement.executeUpdate();
+            String usertab="INSERT INTO USERS VALUES(?,?)";
+            PreparedStatement usstmt = con.prepareStatement(usertab);
+            usstmt.setString(1, username);
+            usstmt.setString(2, password);
+            usstmt.executeUpdate();
+
+            out.write("done");
+            }
         } catch (SQLException ex) {
-            out.printf("hjmjhgmgh");
+            String rs=ex.getMessage();
+            out.printf(rs);
             Logger.getLogger(imageupload.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
+          
        
     }
+        
     }
     
 

@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -14,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -46,10 +46,18 @@ import com.sun.jersey.core.util.Base64;
 import com.sun.jersey.multipart.FormDataBodyPart;
 import com.sun.jersey.multipart.FormDataMultiPart;
 import com.sun.jersey.multipart.FormDataParam;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.sql.PreparedStatement;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
 import javax.xml.bind.DatatypeConverter;
 
 /**
@@ -60,18 +68,22 @@ import javax.xml.bind.DatatypeConverter;
 @Stateful
 @Path("blog")
 public class blog {
-
+final static Map<String, AsyncResponse> waiters = new ConcurrentHashMap<>();  
+final static ExecutorService ex = Executors.newSingleThreadExecutor(); 
     Connection con = null;
     int count = 0;
     Statement smt;
     ResultSet rst;
     int a1;
     String imagepath;
-    Image myImage;
+
     String base64String;
-    String myname;
+    String sendinguserdata;
+    int totalnum;
 
     JsonArrayBuilder array = Json.createArrayBuilder();
+        JsonArrayBuilder array1 = Json.createArrayBuilder();
+
 
     /**
      * Creates a new instance of blog
@@ -91,21 +103,21 @@ public class blog {
      * @param request
      * @return an instance of java.lang.String
      */
-    @Path("/globalblogs")
+    @Path("/getcurrentuserimage")
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String getJson(@Context HttpServletRequest request) {
-        
-        try{
-          
+
+        try {
+
             con = DatabaseConnection.getConnection();
             //TODO return proper representation object
             HttpSession session = request.getSession();
             String user = (String) session.getAttribute("username");
-           String imagequery = "SELECT image from IMAGES where username='"+user+"'";
-//
-         smt = con.createStatement();
-         rst = smt.executeQuery(imagequery);
+            String imagequery = "SELECT image from IMAGES where username='" + user + "'";
+
+            smt = con.createStatement();
+            rst = smt.executeQuery(imagequery);
 
             while (rst.next()) {
                 count++;
@@ -116,50 +128,50 @@ public class blog {
                 try {
                     a1 = stream.read();
                 } catch (IOException ex) {
-                      return "exception in stream read";
+                    return "exception in stream read";
                 }
                 while (a1 >= 0) {
                     output.write((char) a1);
                     try {
                         a1 = stream.read();
                     } catch (IOException ex) {
-                        
+
                         return "exception in writing ayya";
                     }
                 }
-                byte[] dt= new byte[166666];
-                 base64String= DatatypeConverter.printBase64Binary(output.toByteArray());
-    //             base64String = Base64.encode(output.toByteArray()).toString();
-              
+                byte[] dt = new byte[166666];
+                base64String = DatatypeConverter.printBase64Binary(output.toByteArray());
 
             }
             if (count == 0) {
-                imagepath="images/icon.png";
+                base64String = "images/icon.png";
                 JsonObjectBuilder build = Json.createObjectBuilder().add("image", imagepath);
-                    
-            array.add(build);
-            String img = array.build().toString();
-               return "did not read image from data base"; 
-            //return myImage;
+
+                array.add(build);
+                String img = array.build().toString();
+                return "did not read image from data base";
+
             }
-//            JsonObjectBuilder build = Json.createObjectBuilder().add("myname", "pankaj")
-//                    .add("username", user);
-//            array.add(build);
-//            String myname = array.build().toString();
 
-        } catch (SQLException ex)
-       {       String msg=ex.getMessage();
+            JsonObjectBuilder build = Json.createObjectBuilder().add("myimage", base64String)
+                    .add("username", user);
 
-                     return msg;
+            array.add(build);
+            sendinguserdata = array.build().toString();
+
+        } catch (SQLException ex) {
+            String msg = ex.getMessage();
+
+            return msg;
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            
-String msg=ex.getMessage();
 
-                     return msg;
-//Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
+            String msg = ex.getMessage();
+
+            return msg;
+
         }
-        //return "did not work";
-         return base64String;
+
+        return sendinguserdata;
     }
 
     /**
@@ -168,65 +180,81 @@ String msg=ex.getMessage();
      * @param content representation for the resource
      * @return an HTTP response with content of the updated or created resource.
      */
-
     /**
      * PUT method for updating or creating an instance of blog
+     *
      * @param fileInputStream
      * @return an HTTP response with content of the updated or created resource.
      */
-     @POST
-    @Path("/adduser")
-    //@Consumes("application/x-www-form-urlencoded","multipart/form-data")
-    public String Upload(@FormDataParam("image") InputStream fileInputStream
-                         ) {
-        
-       
-        
-        try {
-            con = DatabaseConnection.getConnection();
-            
-            // file =  contentDispositionHeader.getFileName();
-            
-          
-            
-            // save the file to the server
-            
-            //saveFile(fileInputStream, filePath);
-            
-            
-            
-            // String output = "File saved to server location : " + filePath;
-            
-            String sql = "INSERT INTO IMAGES(image, tag, username,date_uploaded) values (?, ?, ?,?)";
-            PreparedStatement statement = con.prepareStatement(sql);
-            statement.setBlob(1, fileInputStream);
-            statement.setString(2, "first one");
-            statement.setString(3, "pkt@yahoo.com");
-            Date d=new Date();
-             Calendar calendar = Calendar.getInstance();
-            java.sql.Date javaSqlDate = new java.sql.Date(calendar.getTime().getTime());
-             statement.setDate(4,javaSqlDate);
-          
- 
-            // sends the statement to the database server
-            int row = statement.executeUpdate();
-            
-        } catch (SQLException ex) {
-            String st=ex.getMessage();
-            return "hkjjhkjh";
-            //Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
-         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-             return "sdfgdsgfdsgdfg";
-            //Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
-        }
-return "jkhgtuyfg";
-    }
+    @GET
+    @Path("/global")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAllData(@Context HttpServletRequest request){
 
+    try {
+        con = DatabaseConnection.getConnection();
+        
+        String query="SELECT blog.blog_id,blog_text,blog_date,blog.username, image FROM blog LEFT OUTER JOIN images ON blog.username=images.username";
+          
+        
+               // String query="SELECT count(blog.blog_id),blog.blog_id,blog_text,blog_date,blog.username, image, comment_id,comment_text,comment_date,comments.username FROM blog INNER JOIN images ON blog.username=images.username";
+
+        smt = con.createStatement();
+                    rst=smt.executeQuery(query);
+                    while(rst.next())
+                    {
+                        InputStream st=rst.getBinaryStream(5);
+                        ByteArrayOutputStream output = new ByteArrayOutputStream();
+            try {
+                a1 = st.read();
+            } catch (IOException ex) {
+                Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+             while (a1 >= 0) {
+                    output.write((char) a1);
+                    try {
+                        a1 = st.read();
+                    } catch (IOException ex) {
+
+                        return "exception in writing ayya";
+                    }
+                }
+                byte[] dt = new byte[166666];
+                base64String = DatatypeConverter.printBase64Binary(output.toByteArray());
+                //int totalblogs=rst.getInt(1);
+                int blogid=rst.getInt(1);
+                String blogtext=rst.getString(2);
+                String blogdate=rst.getString(3);
+                String bloguser=rst.getString(4);
+                
+                
+                   JsonObjectBuilder build1 = Json.createObjectBuilder()
+                    .add("bloguserimage", base64String)
+                    .add("blogid", blogid)
+                    .add("blogtext", blogtext)
+                    .add("blogdate",blogdate)
+                    .add("bloguser", bloguser);
+                     
+                                array1.add(build1);
+
+                    
+                    }
+    } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException ex) {
+        Logger.getLogger(blog.class.getName()).log(Level.SEVERE, null, ex);
+    }
+        
+                String   alldata = array1.build().toString();
+return alldata; 
+    }
     
-    
-    
+   
     @PUT
     @Consumes("application/json")
     public void putJson(String content) {
     }
+
+
+
+
+
 }
