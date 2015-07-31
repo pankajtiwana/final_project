@@ -23,7 +23,7 @@ $(document).ready(function () {
 
             console.log(data);
             $.each(data, function (index, item) {
-                if (!item.username) {
+                if (item.username==="") {
 
                 }
                 else {
@@ -45,7 +45,8 @@ $(document).ready(function () {
 
         },
         error: function (jqxhr, status, errorMsg) {
-            alert('Failed! ' + errorMsg);
+            window.location.replace("http://blogbase-c0652113.rhcloud.com/");
+           // alert('Failed! ' + errorMsg);
         }
     });
 
